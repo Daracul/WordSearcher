@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.daracul.wordsseacher.Dependencies
 import com.daracul.wordsseacher.R
 import com.daracul.wordsseacher.presentation.MainActivity
-import com.daracul.wordsseacher.utils.hideSoftKeyboard
 import com.daracul.wordsseacher.utils.textChangesDebounce
 import kotlinx.android.synthetic.main.fragment_main.*
 
@@ -33,16 +32,25 @@ class MainFragment : Fragment() {
         adapter = WordsAdapter { viewModel.doClick(it) }
         rv_words.adapter = adapter
 
-        search_view.textChangesDebounce({viewModel.searchWord(it)})
+        search_view.textChangesDebounce({ viewModel.searchWord(it) })
 
         viewModel.wordsLiveData.observe(viewLifecycleOwner,
             Observer {
-                adapter.submitList(it?: emptyList())  })
+                it?.let { adapter.submitList(it) }
+            })
         viewModel.navigateDetailsLiveData.observe(viewLifecycleOwner, Observer {
             val word = it.getContentIfNotHandled()
-            word?.let {(requireActivity() as MainActivity).navigateToDetailsFragment(word)}
+            word?.let { (requireActivity() as MainActivity).navigateToDetailsFragment(word) }
+        })
+        viewModel.progressLiveData.observe(viewLifecycleOwner, Observer {
+            greetings_text.visibility = View.GONE
+            progress_bar.visibility = if (it == true) View.VISIBLE else View.INVISIBLE
+        })
+        viewModel.showErrorLiveData.observe(viewLifecycleOwner, Observer {
+            empty_text.visibility = if (it == true) View.VISIBLE else View.GONE
+            rv_words.visibility = if (it == true) View.GONE else View.VISIBLE
         })
     }
-    
+
 
 }
