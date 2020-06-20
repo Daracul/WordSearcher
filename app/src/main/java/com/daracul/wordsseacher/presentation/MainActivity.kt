@@ -3,6 +3,7 @@ package com.daracul.wordsseacher.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.daracul.wordsseacher.R
+import com.daracul.wordsseacher.domain.model.Word
 import com.daracul.wordsseacher.presentation.details.DetailsFragment
 import com.daracul.wordsseacher.presentation.main.MainFragment
 
@@ -22,12 +23,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun navigateToDetailsFragment(){
+    fun navigateToDetailsFragment(word: Word?) {
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.container,
-                DetailsFragment()
+                DetailsFragment.create(word)
             )
+            .addToBackStack(null)
             .commit()
     }
 }

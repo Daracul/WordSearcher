@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WordsSeacher</string>
+    <string name="details_others_topic">Другие значения</string>
 </resources>

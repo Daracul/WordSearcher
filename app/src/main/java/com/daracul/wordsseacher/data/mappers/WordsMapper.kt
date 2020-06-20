@@ -5,25 +5,37 @@ import com.daracul.wordsseacher.api.response.WordJson
 import com.daracul.wordsseacher.domain.mappers.Mapper
 import com.daracul.wordsseacher.domain.model.Word
 
+private const val HTTPS = "https:"
+
 class WordsMapper : Mapper<WordJson, Word> {
     override fun map(from: WordJson): Word {
         return with(from) {
             Word(
                 id = id,
                 name = text ?: "",
-                translations = getMeaning(meanings),
+                translation = getFirstTranslation(meanings),
+                otherTranslations = getMeaning(meanings),
                 transcription = getTranscription(meanings),
                 imageUrl = getImageUrl(meanings)
             )
         }
     }
 
-    private fun getImageUrl(meanings: List<Meaning?>): String = meanings.first()?.previewUrl ?: ""
+    private fun getFirstTranslation(meanings: List<Meaning?>) =
+        meanings.first()?.translation?.text ?: ""
+
+    private fun getImageUrl(meanings: List<Meaning?>): String {
+        var url = meanings.first()?.imageUrl ?: ""
+        if (url.isNotEmpty()) url = HTTPS + url
+        return url
+    }
 
     private fun getMeaning(meanings: List<Meaning?>): List<String> {
         val list = mutableListOf<String>()
+        val firstTranslation = getFirstTranslation(meanings)
         meanings.forEach {
-            list.add(it?.translation?.text ?: "")
+            val translation = it?.translation?.text ?: ""
+            if (translation != firstTranslation) list.add(translation)
         }
         return list
     }

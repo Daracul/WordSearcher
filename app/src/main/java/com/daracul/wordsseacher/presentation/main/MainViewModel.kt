@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModel
 import com.daracul.wordsseacher.domain.model.Word
 import com.daracul.wordsseacher.domain.usecase.GetWordsResult
 import com.daracul.wordsseacher.domain.usecase.GetWordsUseCase
+import com.daracul.wordsseacher.utils.SingleEvent
 
 class MainViewModel(
     private val getWordsUseCase: GetWordsUseCase
 ) : ViewModel(
 ) {
-    private val _wordsLiveData:MutableLiveData<List<Word>> = MutableLiveData()
+    private val _wordsLiveData: MutableLiveData<List<Word>> = MutableLiveData()
+    private val _navigateDetailsLiveData: MutableLiveData<SingleEvent<Word>> = MutableLiveData()
+
     val wordsLiveData = _wordsLiveData
+    val navigateDetailsLiveData = _navigateDetailsLiveData
 
     fun searchWord(word: String) {
         getWordsUseCase.getWords(word) { getWordsResult ->
@@ -24,6 +28,10 @@ class MainViewModel(
                 }
             }
         }
+    }
+
+    fun doClick(word: Word) {
+        _navigateDetailsLiveData.postValue(SingleEvent(word))
     }
 
 }
