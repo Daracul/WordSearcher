@@ -21,7 +21,7 @@ class MainViewModel(
     val wordsLiveData: LiveData<List<Word>> = _wordsLiveData
     val navigateDetailsLiveData: LiveData<SingleEvent<Word>> = _navigateDetailsLiveData
     val progressLiveData: LiveData<Boolean> = _progressLiveData
-    val showErrorLiveData:LiveData<Boolean> = _showErrorLiveData
+    val showErrorLiveData: LiveData<Boolean> = _showErrorLiveData
 
     fun searchWord(word: String) {
         if (previousQuery != word) {
@@ -44,8 +44,14 @@ class MainViewModel(
         }
     }
 
-    fun doClick(word: Word) {
+    fun openDetails(word: Word) {
         _navigateDetailsLiveData.postValue(SingleEvent(word))
+    }
+
+    fun tryOpen(word: String) {
+        val wordList = _wordsLiveData.value ?: emptyList()
+        val searchedWorld = wordList.firstOrNull { it.name == word }
+        searchedWorld?.let { openDetails(searchedWorld) }
     }
 
 }

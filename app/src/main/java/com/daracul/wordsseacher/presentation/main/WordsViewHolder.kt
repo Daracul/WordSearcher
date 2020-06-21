@@ -9,6 +9,5 @@ class WordsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(word: Word, clickListener: (Word) -> Unit) {
         itemView.text_view_word.text = word.name
         itemView.setOnClickListener { clickListener(word) }
-
     }
 }

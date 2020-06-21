@@ -47,15 +47,17 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.wordLiveData.observe(viewLifecycleOwner, Observer {
-            word -> word?.let {
-            text_view_word.text = it.name
-            text_view_transcript.text = it.transcription
-            text_view_translation.text = it.translation
-            text_view_headline.visibility = if (it.otherTranslations.isEmpty()) View.GONE else View.VISIBLE
-            text_view_others.text = it.otherTranslations.joinToString("; ")
-            loadRoundedImage(it.imageUrl, imageView)
-        }
+        toolbar.setNavigationOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
+        viewModel.wordLiveData.observe(viewLifecycleOwner, Observer { word ->
+            word?.let {
+                text_view_word.text = it.name
+                text_view_transcript.text = it.transcription
+                text_view_translation.text = it.translation
+                text_view_headline.visibility =
+                    if (it.otherTranslations.isEmpty()) View.GONE else View.VISIBLE
+                text_view_others.text = it.otherTranslations.joinToString("; ")
+                loadRoundedImage(it.imageUrl, imageView)
+            }
         })
     }
 }

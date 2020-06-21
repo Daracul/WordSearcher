@@ -13,12 +13,17 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.daracul.wordsseacher.R
 
-fun SearchView.textChangesDebounce(textChanged: (String) -> Unit, delay: Long = 600) {
+fun SearchView.textChangesDebounce(
+    textChanged: (String) -> Unit,
+    onSearchClicked: ((String) -> Unit)? = null,
+    delay: Long = 500
+) {
 
     setOnQueryTextListener(object : SearchView.OnQueryTextListener {
         private val handler = Handler(Looper.getMainLooper())
         private var runnable: Runnable? = null
         override fun onQueryTextSubmit(query: String?): Boolean {
+            onSearchClicked?.let { onSearchClicked(query ?: "") }
             return true
         }
 
@@ -31,7 +36,7 @@ fun SearchView.textChangesDebounce(textChanged: (String) -> Unit, delay: Long = 
     })
 }
 
-fun Fragment.loadRoundedImage(url:String, imageView: ImageView){
+fun Fragment.loadRoundedImage(url: String, imageView: ImageView) {
     Glide.with(this)
         .load(url)
         .placeholder(R.drawable.placeholder)
@@ -39,7 +44,10 @@ fun Fragment.loadRoundedImage(url:String, imageView: ImageView){
             resources.getDimensionPixelOffset(R.dimen.word_card_width),
             resources.getDimensionPixelOffset(R.dimen.word_card_height)
         )
-        .transform(CenterCrop(), RoundedCorners(resources.getDimensionPixelOffset(R.dimen.word_card_radius)))
+        .transform(
+            CenterCrop(),
+            RoundedCorners(resources.getDimensionPixelOffset(R.dimen.word_card_radius))
+        )
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(imageView)
 }

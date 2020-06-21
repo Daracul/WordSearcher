@@ -29,10 +29,12 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        adapter = WordsAdapter { viewModel.doClick(it) }
+        adapter = WordsAdapter { viewModel.openDetails(it) }
         rv_words.adapter = adapter
 
-        search_view.textChangesDebounce({ viewModel.searchWord(it) })
+        search_view.textChangesDebounce(
+            { viewModel.searchWord(it) },
+            { viewModel.tryOpen(it) })
 
         viewModel.wordsLiveData.observe(viewLifecycleOwner,
             Observer {

@@ -3,4 +3,5 @@
     <string name="details_others_topic">Другие значения</string>
     <string name="greetings_text">Начните вводить, чтобы искать слово</string>
     <string name="empty_text">По вашему запросу ничего не найдено, попробуйте снова</string>
+    <string name="details_title">"Информация о слове"</string>
 </resources>
